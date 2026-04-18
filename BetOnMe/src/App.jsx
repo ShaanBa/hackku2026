@@ -4,27 +4,25 @@ import Home from "./pages/Home";
 import Bets from "./pages/Bets";
 import Profile from "./pages/Profile";
 import SignIn from "./pages/Sign-in";
-import SignUp from "./pages/Signup";
+import { AuthProvider } from "./lib/AuthContext";
+import { DevModeProvider } from "./lib/DevModeProvider";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-
-        {/* Base layout */}
-        <Route path="/" element={<Layout />}>
-
-          {/* Pages */}
-          <Route index element={<Home />} />
-          <Route path="bets" element={<Bets />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="sign-in" element={<SignIn />} />
-          <Route path="signup" element={<SignUp />} />
-
-        </Route>
-
-      </Routes>
-    </BrowserRouter>
+    <DevModeProvider>
+      <AuthProvider>
+        <BrowserRouter basename="/app">
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="bets" element={<Bets />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="sign-in" element={<SignIn />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </DevModeProvider>
   );
 }
 

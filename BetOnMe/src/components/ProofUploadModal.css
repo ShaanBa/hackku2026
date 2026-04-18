@@ -1,0 +1,209 @@
+.proof-modal {
+  width: min(520px, 100%);
+}
+
+.file-drop {
+  display: block;
+  border: 1.5px dashed var(--border);
+  border-radius: 12px;
+  background: #0f172f;
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.file-drop:hover {
+  border-color: var(--accent);
+  background: #111a36;
+}
+
+.file-drop-empty {
+  text-align: center;
+  color: var(--text-dim);
+}
+
+.file-drop-plus {
+  font-size: 36px;
+  margin-bottom: 6px;
+}
+
+.file-preview {
+  max-width: 100%;
+  max-height: 280px;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.result-banner {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid;
+}
+
+.result-banner.ok {
+  background: rgba(74, 222, 128, 0.1);
+  border-color: rgba(74, 222, 128, 0.4);
+  color: #bff5d4;
+}
+
+.result-banner.bad {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.4);
+  color: #fda4a4;
+}
+
+.result-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.proof-modal .tx-links {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.proof-modal .tx-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: rgba(124, 156, 255, 0.14);
+  border: 1px solid rgba(124, 156, 255, 0.35);
+  color: #c6d2ff;
+  text-decoration: none;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.proof-modal .tx-chip:hover {
+  background: rgba(124, 156, 255, 0.24);
+  border-color: var(--accent);
+}
+
+.vlm-badge {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid;
+  font-size: 13px;
+}
+
+.vlm-badge.ok {
+  background: rgba(124, 156, 255, 0.1);
+  border-color: rgba(124, 156, 255, 0.4);
+  color: #d3dcff;
+}
+
+.vlm-badge.bad {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.4);
+  color: #fda4a4;
+}
+
+.vlm-badge.neutral {
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.3);
+  color: #c8d2e0;
+}
+
+.vlm-title {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.vlm-conf {
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+.vlm-rationale {
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.vlm-model {
+  margin-top: 4px;
+  opacity: 0.55;
+  font-size: 11px;
+}
+
+.loc-banner {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loc-banner.loc-prompting,
+.loc-banner.loc-idle {
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.3);
+  color: #c8d2e0;
+}
+
+.loc-banner.loc-ready {
+  background: rgba(74, 222, 128, 0.08);
+  border-color: rgba(74, 222, 128, 0.3);
+  color: #bff5d4;
+}
+
+.loc-banner.loc-denied,
+.loc-banner.loc-timeout,
+.loc-banner.loc-unavailable,
+.loc-banner.loc-unsupported {
+  background: rgba(248, 113, 113, 0.08);
+  border-color: rgba(248, 113, 113, 0.3);
+  color: #fda4a4;
+  align-items: flex-start;
+}
+
+.loc-retry {
+  margin-top: 6px;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+.fix-hint {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  padding: 6px 10px;
+  line-height: 1.4;
+}
+
+.error-details {
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.error-details summary {
+  cursor: pointer;
+  opacity: 0.75;
+  user-select: none;
+}
+
+.error-details pre {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-top: 6px;
+  overflow-x: auto;
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 180px;
+  overflow-y: auto;
+}
