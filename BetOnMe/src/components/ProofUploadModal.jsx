@@ -414,14 +414,74 @@ function ProofUploadModal({ open, goal, onClose, onUploaded }) {
                   <strong>How to fix:</strong> {copy.fix}
                 </div>
               )}
-              {typeof result.verification?.distanceMeters === "number" && (
-                <div className="muted small" style={{ marginTop: 6 }}>
-                  distance: {Math.round(result.verification.distanceMeters)} m
-                  {goal?.location?.radiusMeters
-                    ? ` (allowed: ${goal.location.radiusMeters} m)`
-                    : ""}
-                </div>
-              )}
+              {typeof result.verification?.distanceMeters === "number" && (() => {
+                const meters = result.verification.distanceMeters;
+                const km = meters / 1000;
+                // Anything over a few km is almost certainly a wrong-pin
+                // problem rather than a "walk closer" problem; render in
+                // km so it reads as obviously absurd ("11,285 km away") and
+                // surface both coordinate pairs so the user can see exactly
+                // where the goal landed vs where the photo says they are.
+                const farAway = meters > 5_000;
+                return (
+                  <div className="muted small" style={{ marginTop: 6 }}>
+                    <div>
+                      distance:{" "}
+                      <strong>
+                        {farAway
+                          ? `${km.toLocaleString(undefined, {
+                              maximumFractionDigits: 0,
+                            })} km`
+                          : `${Math.round(meters)} m`}
+                      </strong>
+                      {goal?.location?.radiusMeters
+                        ? ` (allowed: ${goal.location.radiusMeters} m)`
+                        : ""}
+                    </div>
+                    {farAway && (
+                      <div
+                        className="small fix-hint"
+                        style={{ marginTop: 6 }}
+                      >
+                        <strong>That's likely a goal-pin problem, not a photo problem.</strong>{" "}
+                        The check-in is thousands of km from where this goal was
+                        pinned on the map. Delete this goal and recreate it,
+                        making sure to drop the pin on your actual location.
+                      </div>
+                    )}
+                    {(result.gps ||
+                      goal?.location?.lat != null) && (
+                      <details className="error-details" style={{ marginTop: 6 }}>
+                        <summary>Coordinate breakdown</summary>
+                        <pre>
+                          {JSON.stringify(
+                            {
+                              proof: result.gps
+                                ? {
+                                    lat: result.gps.lat,
+                                    lng: result.gps.lng,
+                                    source: result.gpsSource,
+                                  }
+                                : null,
+                              goalPin: goal?.location
+                                ? {
+                                    lat: goal.location.lat,
+                                    lng: goal.location.lng,
+                                    name: goal.location.name || null,
+                                    radiusMeters:
+                                      goal.location.radiusMeters || null,
+                                  }
+                                : null,
+                            },
+                            null,
+                            2
+                          )}
+                        </pre>
+                      </details>
+                    )}
+                  </div>
+                );
+              })()}
               {result.resolution?.status && (
                 <div className="small" style={{ marginTop: 6 }}>
                   Goal auto-resolved to{" "}
