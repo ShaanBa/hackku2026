@@ -150,8 +150,9 @@ function AddBetModal({ open, onClose, onCreated }) {
               <label className="label">Amount (XRP)</label>
               <input
                 type="number"
-                min="0.000001"
-                step="0.01"
+                min="0"
+                step="any"
+                inputMode="decimal"
                 className="input"
                 value={form.stake}
                 onChange={(e) => update({ stake: e.target.value })}
