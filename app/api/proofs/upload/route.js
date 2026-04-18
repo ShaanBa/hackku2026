@@ -166,13 +166,26 @@ export async function POST(request) {
       imageBuffer = buffer;
       imageMime = imageFile.type || null;
 
-      // exifr.parse returns { GPSLatitude, GPSLongitude, DateTimeOriginal, ... }
-      // with GPS already converted to decimal. We also explicitly ask for
-      // OffsetTimeOriginal / OffsetTime — without those the EXIF capture
-      // time is timezone-naive (Android & older iOS especially), and JS
-      // would silently interpret it as the *server's* local time, which
-      // on Vercel means UTC. That's the bug that made Android friends'
-      // proofs land hours outside the goal's window.
+      // exifr.parse normally exposes signed `latitude` / `longitude`
+      // convenience fields when `gps: true`. The catch: `pick` is a
+      // strict allowlist, so if we only pick the raw GPSLatitude/
+      // GPSLongitude tags we get the unsigned magnitudes (no sign,
+      // no hemisphere) and exifr skips computing the signed decimals.
+      // That collapses Western-hemisphere coordinates onto the
+      // Eastern hemisphere — Kansas (-95° lng) becomes Xinjiang (+95°
+      // lng), 11,000+ km from where the photo was actually taken,
+      // and every check-in west of the prime meridian gets rejected.
+      //
+      // Fix: pick the signed `latitude` / `longitude` outputs AND the
+      // hemisphere refs as belt-and-suspenders, so we can apply the
+      // sign ourselves if exifr didn't.
+      //
+      // We also explicitly ask for OffsetTimeOriginal / OffsetTime —
+      // without those the EXIF capture time is timezone-naive
+      // (Android & older iOS especially), and JS would silently
+      // interpret it as the *server's* local time, which on Vercel
+      // means UTC. That's the bug that made Android friends' proofs
+      // land hours outside the goal's window.
       let exifData = {};
       try {
         exifData =
@@ -184,16 +197,37 @@ export async function POST(request) {
               "ModifyDate",
               "OffsetTimeOriginal",
               "OffsetTime",
+              "latitude",
+              "longitude",
               "GPSLatitude",
               "GPSLongitude",
+              "GPSLatitudeRef",
+              "GPSLongitudeRef",
             ],
           })) || {};
       } catch {
         exifData = {};
       }
 
-      const lat = exifData.latitude ?? exifData.GPSLatitude ?? null;
-      const lng = exifData.longitude ?? exifData.GPSLongitude ?? null;
+      // Prefer exifr's pre-signed `latitude` / `longitude`. Fall back
+      // to combining the magnitude with the hemisphere ref ("S" → negate
+      // latitude, "W" → negate longitude). Only as a last resort use the
+      // raw magnitude alone (which is wrong for ~half the planet).
+      const applySign = (mag, ref, negativeRef) => {
+        if (typeof mag !== "number") return null;
+        if (typeof ref === "string") {
+          return ref.toUpperCase() === negativeRef ? -Math.abs(mag) : Math.abs(mag);
+        }
+        return mag;
+      };
+      const lat =
+        typeof exifData.latitude === "number"
+          ? exifData.latitude
+          : applySign(exifData.GPSLatitude, exifData.GPSLatitudeRef, "S");
+      const lng =
+        typeof exifData.longitude === "number"
+          ? exifData.longitude
+          : applySign(exifData.GPSLongitude, exifData.GPSLongitudeRef, "W");
       if (typeof lat === "number" && typeof lng === "number") {
         gps = { lat, lng, accuracyMeters: null };
         gpsSource = "exif";
