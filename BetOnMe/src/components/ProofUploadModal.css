@@ -1,0 +1,90 @@
+.proof-modal {
+  width: min(520px, 100%);
+}
+
+.file-drop {
+  display: block;
+  border: 1.5px dashed var(--border);
+  border-radius: 12px;
+  background: #0f172f;
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.file-drop:hover {
+  border-color: var(--accent);
+  background: #111a36;
+}
+
+.file-drop-empty {
+  text-align: center;
+  color: var(--text-dim);
+}
+
+.file-drop-plus {
+  font-size: 36px;
+  margin-bottom: 6px;
+}
+
+.file-preview {
+  max-width: 100%;
+  max-height: 280px;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.result-banner {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid;
+}
+
+.result-banner.ok {
+  background: rgba(74, 222, 128, 0.1);
+  border-color: rgba(74, 222, 128, 0.4);
+  color: #bff5d4;
+}
+
+.result-banner.bad {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.4);
+  color: #fda4a4;
+}
+
+.result-title {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.proof-modal .tx-links {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.proof-modal .tx-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: rgba(124, 156, 255, 0.14);
+  border: 1px solid rgba(124, 156, 255, 0.35);
+  color: #c6d2ff;
+  text-decoration: none;
+  transition: background 120ms ease, border-color 120ms ease;
+}
+
+.proof-modal .tx-chip:hover {
+  background: rgba(124, 156, 255, 0.24);
+  border-color: var(--accent);
+}

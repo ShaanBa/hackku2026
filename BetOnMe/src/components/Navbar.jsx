@@ -1,12 +1,46 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { useAuth } from "../lib/authContextCore";
+import "./Navbar.css";
 
-function Navbar() {
+function Navbar({ onOpenSidebar }) {
+  const { user, logout } = useAuth();
+
   return (
-    <nav style={{ padding: "10px", background: "#1e293b", color: "white" }}>
-      <Link to="/" style={{ marginRight: "10px" }}>Home</Link>
-      <Link to="/bets" style={{ marginRight: "10px" }}>Bets</Link>
-      <Link to="/profile">Profile</Link>
-      <Link to="/sign-in">Sign-In</Link>
+    <nav className="nav">
+      <Link to="/" className="brand">
+        BetOnMe
+      </Link>
+
+      <div className="nav-links">
+        <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
+          Home
+        </NavLink>
+        <NavLink to="/bets" className={({ isActive }) => (isActive ? "active" : "")}>
+          Bets
+        </NavLink>
+      </div>
+
+      <div className="nav-right">
+        {user ? (
+          <>
+            <button
+              className="btn btn-ghost profile-btn"
+              onClick={onOpenSidebar}
+              title="Open profile & wallet"
+            >
+              <span className="avatar">{user.displayName?.[0]?.toUpperCase() || "U"}</span>
+              <span className="profile-name">{user.displayName}</span>
+            </button>
+            <button className="btn btn-ghost" onClick={logout}>
+              Sign out
+            </button>
+          </>
+        ) : (
+          <Link to="/sign-in" className="btn btn-primary">
+            Sign in
+          </Link>
+        )}
+      </div>
     </nav>
   );
 }
